@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: eduguardian-backend
+    runtime: node
+    plan: free
+    rootDir: FYP/backend
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: EMAIL_ENABLED
+        value: "false"

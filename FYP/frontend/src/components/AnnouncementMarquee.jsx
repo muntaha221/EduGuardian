@@ -1,0 +1,90 @@
+import React, { useEffect, useState } from 'react';
+
+
+// Apply class for hover pause (inline style animation-play-state doesn't work with :hover)
+// We use a wrapper div with the class
+const AnnouncementMarqueeWrapper = ({ role }) => {
+    const [announcements, setAnnouncements] = useState([]);
+
+    useEffect(() => {
+        if (!role || role.toLowerCase() === 'admin') return;
+
+        const fetchAnnouncements = () => {
+            fetch(`/api/announcements?role=${role.toLowerCase()}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) setAnnouncements(data);
+                })
+                .catch(err => console.error('Marquee fetch error:', err));
+        };
+
+        fetchAnnouncements();
+        const interval = setInterval(fetchAnnouncements, 60000);
+        return () => clearInterval(interval);
+    }, [role]);
+
+    if (!role || role.toLowerCase() === 'admin') return null;
+
+    const marqueeText = announcements.length > 0
+        ? announcements.map(a => `📢 ${a.title}: ${a.content}`).join('          ⭐          ')
+        : '📢 Welcome to the school information . Stay tuned for updates!';
+
+    return (
+        <>
+            <style>{`
+                @keyframes marqueeScroll {
+                    0%   { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+                .announcement-marquee-track {
+                    animation: marqueeScroll 35s linear infinite;
+                    white-space: nowrap;
+                    display: inline-block;
+                }
+                .announcement-marquee-track:hover {
+                    animation-play-state: paused;
+                    cursor: default;
+                }
+            `}</style>
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                background: 'linear-gradient(90deg, #1a237e 0%, #283593 100%)',
+                color: '#fff',
+                padding: '7px 0',
+                fontSize: '0.84rem',
+                fontWeight: '500',
+                overflow: 'hidden',
+                boxShadow: '0 2px 10px rgba(26,35,126,0.25)',
+                letterSpacing: '0.01em',
+                zIndex: 999,
+                position: 'relative',
+            }}>
+                <span style={{
+                    background: '#e53935',
+                    color: '#fff',
+                    fontWeight: '700',
+                    fontSize: '0.72rem',
+                    padding: '3px 12px',
+                    borderRadius: '0 20px 20px 0',
+                    marginRight: '16px',
+                    flexShrink: 0,
+                    letterSpacing: '0.08em',
+                    whiteSpace: 'nowrap',
+                    textTransform: 'uppercase',
+                }}>
+                    📣 Notice
+                </span>
+                <div style={{ overflow: 'hidden', flex: 1 }}>
+                    <div className="announcement-marquee-track">
+                        <span style={{ color: '#e3f2fd' }}>
+                            {marqueeText}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{marqueeText}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
+
+export default AnnouncementMarqueeWrapper;
