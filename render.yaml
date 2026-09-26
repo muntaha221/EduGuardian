@@ -14,5 +14,7 @@ services:
         sync: false
       - key: APP_URL
         sync: false
+      - key: FRONTEND_URL
+        sync: false
       - key: EMAIL_ENABLED
         value: "false"

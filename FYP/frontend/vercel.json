@@ -1,0 +1,36 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://eduguardian-backend.onrender.com/api/:path*"
+    },
+    {
+      "source": "/uploads/:path*",
+      "destination": "https://eduguardian-backend.onrender.com/uploads/:path*"
+    },
+    {
+      "source": "/users",
+      "destination": "https://eduguardian-backend.onrender.com/users"
+    },
+    {
+      "source": "/users/:path*",
+      "destination": "https://eduguardian-backend.onrender.com/users/:path*"
+    },
+    {
+      "source": "/students",
+      "destination": "https://eduguardian-backend.onrender.com/students"
+    },
+    {
+      "source": "/students/:path*",
+      "destination": "https://eduguardian-backend.onrender.com/students/:path*"
+    },
+    {
+      "source": "/student/:path*",
+      "destination": "https://eduguardian-backend.onrender.com/student/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

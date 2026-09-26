@@ -21,7 +21,14 @@ uploadDirs.forEach(dir => {
 
 const upload = require('./middleware/upload');
 const getRelativePath = require('./helper/helper')
-app.use(cors());
+const configuredFrontendOrigins = (process.env.FRONTEND_URL || '')
+    .split(',')
+    .map(value => value.trim().replace(/\/$/, ''))
+    .filter(Boolean);
+const allowedOrigins = new Set(['http://localhost:5173', ...configuredFrontendOrigins]);
+app.use(cors({
+    origin: (origin, callback) => callback(null, !origin || allowedOrigins.has(origin))
+}));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.json({ limit: '50mb' }));
